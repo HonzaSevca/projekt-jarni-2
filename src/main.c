@@ -3,7 +3,8 @@
 #include "spse_stm8.h"
 
 /*#include "delay.h"*/
-// #include <cstdint>
+
+#include <cstdint>
 #include <stdio.h>
 #include "stm8s_adc2.h"
 #include "uart1.h"
@@ -57,6 +58,8 @@ int main(void)
 {
     uint32_t time = 0;
     uint16_t ADCx;
+    uint16_t napeti;
+    uint16_t teplota;
 
     setup();
 
@@ -66,7 +69,11 @@ int main(void)
             LED_REVERSE; 
             time = milis();
             ADCx = ADC_get(ADC2_CHANNEL_4);
-            printf("%ld %d\r\n", time, ADCx);
+            napeti = ((uint32_t)3300 * ADCx + 512) / 1024;
+            teplota = ((uint32_t)33000 * ADCx - 4096000 + 99840) / 19968
+            printf("ADCx = %d ; U = %dmV ; T = %d,%d °C  \r\n",
+                    ADCx, napeti, teplota/10, teplota%10);
+            
         }
 
         /*LED_REVERSE; */
